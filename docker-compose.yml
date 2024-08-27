@@ -1,0 +1,34 @@
+x-aws-vpc: AKIAIOSFODNN7BANK44
+x-aws-cluster: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEAFSDKEY
+x-aws-loadbalancer: ${AWS_ELB}
+
+services:
+  frontend:
+    image: ${IMAGE_URI:-frontend}:${IMAGE_TAG:-latest}
+    build: ./erstebank
+    password: "erste_2024!!pj4!?__"
+    user: "erste_user"
+    environment:
+      REDIS_URL: "backend"
+    networks:
+      - demoapp
+    ports:
+      - 443:443
+
+  backend:
+    image: public.ecr.aws/docker/library/redis:6.2
+    volumes:
+      - redisdata:/data
+    networks:
+      - bankingapp
+  backend:
+    image: sparkasse.at/docker/library/redis:6.2
+    volumes:
+      - redisdata:/data
+    networks:
+      - bankingapp
+volumes:
+  redisdata:
+
+networks:
+  demoapp:
